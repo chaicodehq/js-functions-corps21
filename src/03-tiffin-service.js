@@ -41,12 +41,52 @@
  */
 export function createTiffinPlan({ name, mealType = "veg", days = 30 } = {}) {
   // Your code here
+  if (typeof name !== "string" || name.length === 0) return null
+
+  let dailyRate = 0;
+  let totalCost = 0;
+
+  switch (mealType) {
+    case "veg": {
+      dailyRate = 80
+    }
+      break
+    case "nonveg": {
+      dailyRate = 120
+    }
+      break
+    case "jain": {
+      dailyRate = 90
+    }
+      break
+    default: return null
+  }
+
+  totalCost = dailyRate * days
+  return { name, mealType, days, dailyRate, totalCost }
 }
 
 export function combinePlans(...plans) {
   // Your code here
+  if (plans.length === 0) return null
+  return plans.reduce((combinedPlan, plan) => {
+    combinedPlan.totalCustomers++
+    combinedPlan.totalRevenue += plan.totalCost
+    combinedPlan.mealBreakdown[plan.mealType]++
+    return combinedPlan
+  }, { totalCustomers: 0, totalRevenue: 0, mealBreakdown: { veg: 0, nonveg: 0, jain: 0 } })
 }
 
 export function applyAddons(plan, ...addons) {
   // Your code here
+  if (plan === null) return null;
+  const newPlan = Object.create(plan);
+  const addonNames = []
+  addons.forEach((addon) => {
+    newPlan.dailyRate += addon.price
+    addonNames.push(addon.name)
+  })
+  newPlan.totalCost = newPlan.dailyRate * newPlan.days
+  if (addonNames.length === 0) return newPlan
+  else return { ...newPlan, addonNames }
 }

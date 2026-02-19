@@ -54,20 +54,75 @@
  */
 export function repeatChar(char, n) {
   // Your code here
+  if (typeof char !== "string" || char === "") return ""
+  if (n <= 0) return ""
+  return char + repeatChar(char, n - 1)
 }
 
 export function sumNestedArray(arr) {
   // Your code here
+  let sum = 0
+  if (!Array.isArray(arr)) return 0;
+
+  function helper(arr) {
+    if (arr.length === 0) return sum;
+    let newArr = []
+
+    arr.forEach(element => {
+      if (Array.isArray(element)) newArr = element
+      else if (typeof element === "number" && !Number.isNaN(element)) sum += element
+    });
+
+    return helper(newArr)
+  }
+
+  return helper(arr)
 }
 
 export function flattenArray(arr) {
-  // Your code here
+  const result = []
+  if (!Array.isArray(arr)) return [];
+
+  function helper(arr) {
+    arr.forEach((element) => {
+      if(Array.isArray(element)) {
+        helper(element)
+      }else result.push(element)
+    })
+  }
+
+  helper(arr);
+
+  return result;
 }
 
 export function isPalindrome(str) {
   // Your code here
+  if (typeof str !== "string") return false
+  
+  function helper(str, start = 0, end = str.length - 1) {
+    if (str[start] !== str[end]) return false
+    if (start > end) return true
+    return helper(str, start + 1, end - 1)
+  }
+
+  return helper(str.toLowerCase());
 }
 
 export function generatePattern(n) {
   // Your code here
+  if(typeof n !== "number" || Number.isNaN(n) || !Number.isInteger(n) || n <= 0 ) return []
+  const result = []
+  
+  function helper(count, max, str) {
+    if(count === max) return;
+    
+    result.push(`${str}*`);
+    helper(count + 1, n, `${str}*`)
+    if(str !== "")result.push(str)
+  }
+
+  helper(0, n, "")
+
+  return result
 }

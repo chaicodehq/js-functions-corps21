@@ -1,3 +1,4 @@
+import { checkNumbers, wrapFloat } from "./utils/utils";
 /**
  * 🏏 Cricket Player Stats Dashboard
  *
@@ -39,20 +40,33 @@
  */
 export const calcStrikeRate = (runs, balls) => {
   // Your code here
+  if (checkNumbers(runs, balls) || balls <= 0) return 0;
+  return wrapFloat((runs / balls) * 100)
 };
 
 export const calcEconomy = (runsConceded, overs) => {
   // Your code here
+  if (checkNumbers(runsConceded, overs) || overs <= 0) return 0;
+  return wrapFloat(runsConceded / overs)
 };
 
 export const calcBattingAvg = (totalRuns, innings, notOuts = 0) => {
   // Your code here
+  if (checkNumbers(totalRuns, innings, notOuts) || innings - notOuts <= 0) return 0;
+  return wrapFloat(totalRuns / (innings - notOuts))
 };
 
 export const isAllRounder = (battingAvg, economy) => {
   // Your code here
+  if(checkNumbers(battingAvg,economy)) return false
+  return battingAvg > 30 && economy < 8
 };
 
 export const getPlayerCard = (player) => {
   // Your code here
+  if(typeof player !== "object" || Array.isArray(player) || !player || !player?.name) return null
+  const strikeRate = calcStrikeRate(player.runs, player.balls)
+  const economy = calcEconomy(player.runsConceded, player.overs)
+  const battingAvg = calcBattingAvg(player.totalRuns, player.innings, player.notOuts)
+  return {name: player.name, strikeRate, economy, battingAvg, isAllRounder: isAllRounder(battingAvg, economy)}
 };

@@ -46,16 +46,53 @@
  */
 export function createFilter(field, operator, value) {
   // Your code here
+  switch (operator) {
+    case ">": return (obj) => obj[field] > value
+    case "<": return (obj) => obj[field] < value
+    case ">=": return (obj) => obj[field] >= value
+    case "<=": return (obj) => obj[field] <= value
+    case "===": return (obj) => obj[field] === value
+    default: return (_obj) => false
+  }
 }
 
 export function createSorter(field, order = "asc") {
   // Your code here
+  if (order === "asc") {
+    return (obj1, obj2) => {
+      if (typeof obj1[field] === "number" && typeof obj2[field] === "number") {
+        return obj1[field] - obj2[field]
+      } else if (typeof obj1[field] === "string" && typeof obj2[field] === "string") {
+        if (obj1[field] > obj2[field]) return 1
+        else return -1
+      }
+    }
+  } else if (order === "desc") {
+    return (obj1, obj2) => {
+      if (typeof obj1[field] === "number" && typeof obj2[field] === "number") {
+        return obj2[field] - obj1[field]
+      } else if (typeof obj1[field] === "string" && typeof obj2[field] === "string") {
+        if (obj2[field] > obj1[field]) return 1
+        else return -1
+      }
+    }
+  }
 }
 
 export function createMapper(fields) {
   // Your code here
+  return (obj) => fields.reduce((acc, cur) => {
+    acc[cur] = obj[cur]
+    return acc
+  }, {})
 }
 
 export function applyOperations(data, ...operations) {
   // Your code here
+  if (!Array.isArray(data)) return []
+  let result = data;
+  operations.forEach(operation => {
+    result = operation(result)
+  })
+  return result
 }

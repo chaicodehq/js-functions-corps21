@@ -1,3 +1,4 @@
+import { checkNumbers } from "./utils/utils";
 /**
  * 🍳 Dosa Counter - Order Calculator
  *
@@ -33,4 +34,28 @@
  */
 export function calculateDosaOrder(type, quantity = 1, isSpicy = false) {
   // Your code here
+  if(checkNumbers(quantity) || quantity <= 0) return null
+  let total = 0;
+  let pricePerDosa = 0;
+  switch(type) {
+    case "plain": pricePerDosa = 40;
+    break
+    case "masala": pricePerDosa = 60
+    break
+    case "onion": pricePerDosa = 50
+    break
+    case "butter": pricePerDosa = 70
+    break
+    case "paper": pricePerDosa = 90
+    break
+    case "cheese": pricePerDosa = 80
+    break
+    default: return null;
+  }
+
+  
+  if(isSpicy) pricePerDosa += 10
+  total += pricePerDosa * quantity
+
+  return {type, quantity, pricePerDosa, total}
 }
